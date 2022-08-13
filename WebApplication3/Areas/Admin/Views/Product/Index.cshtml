@@ -1,0 +1,319 @@
+﻿@using WebApplication3.Models;
+@model IEnumerable<Products>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<br /><br />
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-info">Product List</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a asp-action="Create" class="btn btn-info"><i class="fa fa-plus"></i>Add New Product</a>
+    </div>
+</div>
+<br />
+
+
+
+<div class="form-row well" style="display:flex">
+    <div class="col ">
+
+        <input  id="lowAmount" style="width:120px;" data-field="lowAmount" class="form-control" name="lowAmount" placeholder="Low Amount"  />
+    </div>
+    <br />
+
+    <div class="col ">
+
+        <input  id="largeAmount" style="width:120px;" class="form-control" data-field="largeAmount" placeholder="High Amount" name="largeAmount" />
+    </div>
+    <div class="col ">
+
+
+        @*<input type="submit" value="Search" text="refresh" style="width:120px;" id="myTable1" onclick="FilterRecord()" class="btn btn-success refresher" />*@
+        <a href="#" class="btn  btn-success" onclick="FilterRecord()">
+            Submit
+        </a>
+       <a href="#" class="fa fa-refresh rfresh" onclick="myFunction()">
+            
+        </a>
+    </div>
+
+    @*<i class="fa fa-refresh rfresh" href aria-hidden="true" onclick="myFunction()"></i>*@
+    <div class="clearfix"></div>
+</div>
+
+<br />
+
+
+@if (Model.Count() == 0)
+{
+    <p> No New Product Yet.</p>
+}
+else
+{
+    
+    <table class="table display" id="myTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductColor)
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAvailable)
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductTypeId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SpecialTypeId)
+                </th>
+               <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductColor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAvailable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductType.Producttype)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SpecialType.SpecialTagType)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+}
+@section scripts{
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+
+    <script type="text/javascript">
+
+
+       var myFunction = function() {
+         //   location.reload();
+
+          //s debugger
+           var lowAmount = document.getElementById("lowAmount").value = "";
+           var largeAmount = document.getElementById("largeAmount").value = "";
+           //var largeAmount = $("#largeAmount").val();
+
+           BindDataTable(lowAmount, largeAmount);
+        }
+        $(document).ready(function () {
+
+            $(function () {
+                var save = '@TempData["save"]'
+                if (save != '') {
+                    alertify.success(save);
+                }
+                var edit = '@TempData["edit"]'
+                if (edit != '') {
+                    alertify.success(edit);
+                }
+                var del = '@TempData["delete"]'
+                if (del != '') {
+                    alertify.error(del);
+                }
+            })
+          BindDataTable();
+        });
+
+        var oTable;
+        var FilterRecord = function() {
+      //    debugger
+      //    alert("a");
+                BindDataTable();
+            }
+
+        var BindDataTable = function () {
+       //    alert("b");
+       //    debugger
+            if ($.fn.DataTable.isDataTable("#myTable")) {
+       //      debugger
+
+                //  oTable.draw();
+              //  oTable.destroy();
+              //  $("#myTable").find('tbody').append("<tr><td><value1></td><td><value1></td></tr>");
+          //      oTable.draw();
+
+               oTable.ajax.reload();
+            ////    $("#myTable").api().ajax.reload();
+
+
+            }
+
+            else {
+        //  alert("c");
+      //   debugger
+                oTable = $("#myTable").DataTable({
+
+                    dom: 'Bfrtip',
+                    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                    destroy: true,
+                   //  "bProcessing": true,
+                    "sAjaxSource": "@Url.Action("Filter", "Product")",
+                    "fnServerData": function (sSource, aoData, fnCallback) {
+
+                        var lowAmount = $("#lowAmount").val();
+                        var largeAmount = $("#largeAmount").val();
+                   //     alert(lowAmount);
+                   //    alert(largeAmount);
+
+                        aoData.push({ "name": "lowAmount", "value": lowAmount }, { "name": "largeAmount", "value": largeAmount });
+                        //aoData.push();
+                    //    debugger
+                     //   alert(aoData);
+                        var result = aoData.map(a => a.name);
+                        var result2 = aoData.map(a => a.value);
+                    //    alert(result);
+                    //    alert(result2);
+                   
+                        $.ajax({
+                            dataType: "json",
+                            type: "GET",
+                           // json: True,
+                              data: aoData,
+                           // data: { lowAmount: $("#lowAmount").val(), largeAmount: $("#largeAmount").val()},
+                            "dataSrc": "",
+                            // url: sSource,
+                               url: '@Url.Action("Filter", "Product")',
+                            success: fnCallback
+                        })
+                    },
+                   
+                    "aoColumns": [
+
+                        { "mData": "id"},
+                        {
+                            "mData": "name"
+                            },
+                        {
+                            "mData": "price"
+                             },
+                        {
+                            "mData": "productColor" },
+                        {
+                            "mData": "isAvailable",
+                            "render": function (Price) {
+
+                                //debugger
+                            if (Price == true) {
+                                content = "Yes"
+                                return content;
+                            }
+                            else {
+                              //  debugger
+                                content = "No";
+                                return content; 
+                            }
+                        },
+                        },  
+                        {
+                            "mData": "productType.producttype"
+                        },
+                        {
+                            "mData": "specialType.specialTagType"
+                          //  "render": function (id, Name, Price, ProductColor, IsAvailable, ProductTypeId, SpecialTypeId) {
+                            //    debugger
+                              //  content = "<h3>Employee Detail</h3>";
+                             //   content += "<dl class=\"dl-horizontal\">";
+                            //    content += "<dt>Id</dt><dd>" + Price.id + "</dd>";
+                            //    content += "<dt>Name</dt><dd>" + Price.name + "</dd>";
+                           //     content += "<dt>Price</dt><dd>" + Price.price + "</dd>";
+                           //     content += "<dt>ProductColor</dt><dd>" + Price.productColor + "</dd>";
+                            //    content += "<dt>Available</dt><dd>" + Price.isAvailable + "</dd>";
+                           //     content += "<dt>Product Type</dt><dd>" + Price.productTypeId + "</dd>";
+                               // content += "<dt>Special Type</dt><dd>" + Price.specialTypeId + "</dd>";
+                             //   content += "<dt>Special Type</dt><dd>" + Price.specialType.specialTagType + "</dd>";
+                             //  debugger
+
+
+                          //  return content;
+                              
+                             
+
+                           // }
+                        },
+
+                        {     // fifth column (Edit link)
+                          "mData": "Action",
+                        "render": function (id, Name, Price) {
+                          debugger
+                            
+                            content = "<a href='/Admin/Product/Edit/" + Price.id + "'>Edit</a> |";
+                            content += "<a href='/Admin/Product/Details/" + Price.id + "'> Details</a> |";
+                            content += "<a href='/Admin/Product/Delete/" + Price.id + "'> Delete</a>";
+
+                            return content;
+                            
+                            }
+                       }
+
+                    ]
+
+                });
+            }
+        }
+        
+
+        
+    </script>
+
+    
+}
+
+
+<style>
+    .rfresh {
+        position: relative;
+        top: 1px;
+        right: 89px;
+    }
+   
+</style>
+
+
+

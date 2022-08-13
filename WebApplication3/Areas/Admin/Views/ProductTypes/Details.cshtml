@@ -1,0 +1,38 @@
+﻿@model WebApplication3.Models.ProductType
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2 class="text-info">Details</h2>
+
+
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Details" asp-controller="ProductTypes" method="post" role="form">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group "style="display: flex">
+
+                <label asp-for="Producttype" style="width: 150px;"></label>
+                <input asp-for="Producttype"  class="form-control" readonly="readonly" />
+                <span asp-validation-for="Producttype" class="text-danger"></span>
+            </div>
+            
+
+            <div class="form-group">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn  btn-primary">Edit</a>
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
+                @*<input type="submit" class="btn btn-success" value="Back to List" />*@
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

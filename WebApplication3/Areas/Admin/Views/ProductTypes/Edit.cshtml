@@ -1,0 +1,35 @@
+﻿@model WebApplication3.Models.ProductType
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2 class="text-info">Edit Product Type</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-controller="ProductTypes" method="post" role="form">
+            <div class="p-4 rounded border">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group row" style="display: flex">
+                    <label asp-for="Producttype" style="width: 150px"></label>
+                    <input asp-for="Producttype" class="form-control" />
+                    <span asp-validation-for="Producttype" class="text-danger"></span>
+
+                </div>
+               
+
+                <div class="form-group">
+                    <input type="submit" value="Update" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-success">Back to List</a>
+                </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

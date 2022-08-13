@@ -1,0 +1,80 @@
+﻿@using WebApplication3.Models;
+@model IEnumerable<SpecialType>
+@{
+    ViewData["Title"] = "Index";
+}
+<br /><br />
+<div class="row">
+    <div class="col-4">
+        <h2 class="text-info">Special Tag List</h2>
+    </div>
+    <div class="col-4 text-right">
+        <a asp-action="Create" class="btn btn-info"><i class="fa fa-plus"></i>New Special Tag</a>
+    </div>
+</div>
+<br />
+
+@if (Model.Count() == 0)
+{
+    <p> No New Special Tag Yet.</p>
+}
+else
+{
+    <table class="table table-striped border">
+        <tr class="table-info">
+   
+                <th class="b">
+                    @Html.DisplayNameFor(model => model.SpecialTagType)
+                </th>
+                <th class="b"></th>
+                <th class="b"></th>
+
+            </tr>
+       
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SpecialTagType)
+                    </td>
+
+                    <td>
+                        <partial name="_ButtonPartial" model="@item.Id" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+        
+    </table>
+
+}
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var save = '@TempData["save"]'
+            if(save!='') {
+                alertify.success(save);
+            }
+            var edit = '@TempData["edit"]'
+            if(edit!='') {
+                alertify.success(edit);
+            }
+            var del = '@TempData["delete"]'
+            if (del!='') {
+                alertify.error(del);
+            }
+        })
+    </script>
+}
+    <style>
+        .b {
+            background-color: #b6eaf9;
+            border-color: #46b8da
+        }
+    </style>
+
+
+

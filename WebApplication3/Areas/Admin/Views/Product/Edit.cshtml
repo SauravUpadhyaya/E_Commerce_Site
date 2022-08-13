@@ -1,0 +1,136 @@
+﻿@model WebApplication3.Models.Products
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2 class="text-info">Edit Product</h2>
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class=" row p-4 rounded border">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger">
+        </div>
+        <div class="col-md-4">
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="Name" style="width: 168px;"></label>
+
+                <input asp-for="Name" class="form-control" />
+
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="Price" style="width: 168px;"></label>
+
+                <input asp-for="Price" class="form-control" />
+
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="ProductColor" style="width: 168px;"></label>
+
+                <input asp-for="ProductColor" class="form-control" />
+
+                <span asp-validation-for="ProductColor" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="ProductTypeId" style="width: 168px;"></label>
+
+                <select asp-for="ProductTypeId" asp-items="ViewBag.productTypeId" class="form-control"></select>
+                @*<input asp-for="ProductTypeId" class="form-control"/>*@
+
+                <span asp-validation-for="ProductTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="SpecialTypeId" style="width: 168px;"></label>
+
+                <select asp-for="SpecialTypeId" asp-items="ViewBag.SpecialTypeId" class="form-control"></select>
+                @*<input asp-for="SpecialTagId" class="form-control" />*@
+
+                <span asp-validation-for="SpecialTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="IsAvailable" style="width: 115px;"></label>
+
+                <input asp-for="IsAvailable" class="" type="checkbox" />
+
+                <span asp-validation-for="IsAvailable" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="display: flex">
+
+                <label asp-for="Image" style="width: 168px;"></label>
+
+                <input asp-for="Image" onchange="readURL(this)" class="form-control" type="file" />
+
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+
+            <img src="" class="imagePreview" id="imagePreview">
+
+
+
+            <div class="form-group a">
+                <input type="submit" class="btn btn-primary" value="Update" />
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <img src="~/@Model.Image" id="im" width="108%" height="300px" position="absolute" style="border-radius: 5px;border: 1px solid #efefef" />
+
+
+        </div>
+        
+    </div>
+    <div class="clearfix"></div>
+</form>
+@section Scripts{
+    <script>
+      
+        function readURL(input) {
+
+            $("#im").hide();
+            
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imagePreview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+       
+
+    </script>
+   
+
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<style>
+
+    .a {
+        position: relative;
+        top: 0px;
+    }
+
+    img#imagePreview {
+        position: absolute;
+        left: 406px;
+        top: 0px;
+        height: 300px;
+        width: 99%;
+    }
+
+
+   
+</style>

@@ -1,0 +1,190 @@
+﻿@using WebApplication3.Models;
+@*@model List<Products>*@
+
+@model X.PagedList.IPagedList<Products>
+
+
+@using X.PagedList.Mvc.Common
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<br /><br />
+
+      <div class="col ">
+
+          <input id="search" style="width:120px;" class="form-control" placeholder="Search" name="Search" />
+      </div>
+      <div class="col ">
+
+
+          @*<input type="submit" value="Search" text="refresh" style="width:120px;" id="myTable1" onclick="FilterRecord()" class="btn btn-success refresher" />*@
+          <a href="#" class="btn  btn-success" id="searchrecord" onclick="searchRecord()">
+              Search
+          </a>
+         
+      </div>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+
+        <div class="col-sm-4" style="width:350px" id="K">
+            <div class="card mb-4 abc">
+                <div class="card-header a">
+
+                    <label style="font-size: 23px;color: steelblue">@product.Name</label>
+
+                </div>
+
+                <img src="~/@product.Image" alt="Card Image" class="card-img-top" style="height: 300px; width:100%" />
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <label style="font-size: 20px;color: #a51313"><b>Price : @product.Price</b></label>
+                        </div>
+                        <a asp-action="Detail" asp-controller="Home" asp-route-id="@product.Id" class="btn btn-success pull-right btn-outline-info">Details</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    }
+
+
+
+</div>
+
+<div>
+    @Html.PagedListPager(Model, c => Href("~/Customer/Home/Index?page=" + c), PagedListRenderOptionsBase.PageNumbersOnly)
+</div>
+
+<style>
+    .card-header.a {
+        background-color: gainsboro;
+    }
+
+    .abc {
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Style the search field */
+    div.searching input[type=text] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+    }
+
+    /* Style the submit button */
+    div.searching button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: #2196F3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none; /* Prevent double borders */
+        cursor: pointer;
+    }
+
+        div.searching button:hover {
+            background: #0b7dda;
+        }
+
+    /* Clear floats */
+    .searching::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+<script>
+
+    // Get the input field
+    var input = document.getElementById("search");
+
+    // Execute a function when the user releases a key on the keyboard
+    input.addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("searchrecord").click();
+        }
+    });
+
+
+
+    var searchRecord = function () {
+      //  debugger
+
+
+            var text = $("#search").val();
+            //  var data = { searchText: text };
+            //  data.param1 = words[0];
+       // debugger
+        $.ajax({
+            dataType: "json",
+         // contentType: 'application/json' ,
+            type: 'POST',
+            // json: True,
+            data: { searchText: text },
+          // "dataSrc": "",
+            // url: sSource,
+            url: '@Url.Action("Index", "Home")',
+
+            success: function (data) {
+                debugger
+                alert("f");
+                var k = JSON.stringify(data);
+
+                debugger
+                K1 = data.response.id;
+                if (K1 == undefined) {
+
+                   // alert("Out of Stock!");
+                  //  window.location = "/#";
+
+                }
+                else { window.location = "/Customer/Home/Detail/" + K1;}
+                //   alert(K1);
+                //  $('#K').html(data.response);
+                //   window.location = "/Customer/Home/Index?" + "page=" c && + "Id=" K1;
+
+
+                // debugger
+
+                //  window.location = '/#' + K1;
+
+             },
+            failure: function (response) {
+                alert("b");
+            },
+            error: function (response) {
+                window.onload = function () {
+                alert("@ViewBag.message");
+            };
+            }
+        });
+
+
+
+
+
+
+    }
+</script>
